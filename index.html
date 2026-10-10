@@ -94,10 +94,10 @@ svg { display: block; }
 @keyframes wtFadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .wt-enter { animation: wtFadeUp .32s cubic-bezier(.16,.8,.3,1); }
 
-.wt-cta, .wt-option, .wt-add-set-btn, .wt-icon-btn, .wt-icon-btn-quiet, .wt-quick-add-chip, .wt-filter-chip, .wt-nav-btn, .wt-color-dot, .wt-check-row, .wt-fail-toggle, .wt-next, .wt-raise {
+.wt-cta, .wt-option, .wt-add-set-btn, .wt-icon-btn, .wt-icon-btn-quiet, .wt-quick-add-chip, .wt-filter-chip, .wt-nav-btn, .wt-color-dot, .wt-check-row, .wt-next, .wt-raise {
   transition: transform .12s ease, background-color .15s ease, border-color .15s ease, color .15s ease, opacity .15s ease;
 }
-.wt-cta:active, .wt-option:active, .wt-add-set-btn:active, .wt-quick-add-chip:active, .wt-filter-chip:active, .wt-check-row:active, .wt-fail-toggle:active, .wt-next:active, button.wt-raise:active { transform: scale(.97); }
+.wt-cta:active, .wt-option:active, .wt-add-set-btn:active, .wt-quick-add-chip:active, .wt-filter-chip:active, .wt-check-row:active, .wt-next:active, button.wt-raise:active { transform: scale(.97); }
 .wt-icon-btn:active, .wt-icon-btn-quiet:active, .wt-nav-btn:active, .wt-color-dot:active { transform: scale(.88); }
 
 @keyframes wtChipPop { 0% { transform: scale(.7); opacity: 0; } 65% { transform: scale(1.07); opacity: 1; } 100% { transform: scale(1); } }
@@ -169,7 +169,6 @@ button.wt-raise { cursor: pointer; }
 .wt-chip-w { font-family: var(--display); font-size: 21px; font-weight: 800; line-height: 1; }
 .wt-chip-u { font-size: 12.5px; font-weight: 600; color: var(--dim); }
 .wt-chip svg { align-self: center; }
-.wt-chip-fail { display: inline-flex; align-self: center; color: var(--push-ink); margin-inline-start: 2px; }
 .wt-chip-pr { border-color: var(--pr); color: var(--pr); background: transparent; }
 .wt-chip-pr .wt-chip-u { color: var(--pr); }
 .wt-chip-editing { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
@@ -185,8 +184,6 @@ button.wt-raise { cursor: pointer; }
 .wt-input-num { -moz-appearance: textfield; text-align: center; font-size: 20px; font-weight: 700; padding: 10px 6px; }
 .wt-input-tiny { flex: 1; padding: 9px 6px; font-size: 14px; text-align: center; }
 .wt-add-set-btn { background: var(--accent); color: var(--accent-ink); border: none; border-radius: 12px; padding: 0 16px; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-.wt-fail-toggle { background: transparent; color: var(--dim); border: 1.5px solid var(--border); border-radius: 12px; padding: 0 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; font-size: 11px; font-weight: 700; cursor: pointer; min-width: 50px; }
-.wt-fail-toggle.on { background: var(--push); border-color: var(--push); color: #fff; }
 .wt-hint-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; min-height: 26px; }
 .wt-next { background: none; border: 1px solid var(--border); border-radius: 20px; padding: 4px 11px; font-size: 12.5px; font-weight: 600; color: var(--text); cursor: pointer; }
 .wt-best-hint { font-size: 12.5px; font-weight: 600; color: var(--faint); margin-inline-start: auto; }
@@ -379,7 +376,6 @@ button.wt-raise { cursor: pointer; }
     repeat: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.5l3.5 3.5-3.5 3.5"/><path d="M3.5 10.5V9a4 4 0 0 1 4-4H20"/><path d="M7 21.5L3.5 18l3.5-3.5"/><path d="M20.5 13.5V15a4 4 0 0 1-4 4H4"/></svg>',
     target: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>',
     flame: '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" stroke="none"><path d="M12 2.2c1.1 3-3 4-3 8.1a3 3 0 003 3 3 3 0 003-3c1 2 2 3.3 2 5.2A5 5 0 0112 20a5 5 0 01-5-5.2c0-4.2 3.2-5.3 5-12.6z"/></svg>',
-    bolt: '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" stroke="none"><path d="M13.6 2L5 13.4h5.9L9.8 22 19 10.2h-6z"/></svg>',
     up: '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6M6 11.5l6-6 6 6"/></svg>',
     emptyDoodle: '<svg viewBox="0 0 64 64" width="52" height="52" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="24" width="8" height="16" rx="2"/><rect x="50" y="24" width="8" height="16" rx="2"/><rect x="14" y="20" width="6" height="24" rx="1.5"/><rect x="44" y="20" width="6" height="24" rx="1.5"/><line x1="20" y1="32" x2="44" y2="32"/></svg>'
   };
@@ -397,7 +393,6 @@ button.wt-raise { cursor: pointer; }
   var progressExercise = null;
   var lastAddedChip = null;
   var editingSet = null;
-  var failFlags = {};
   var animateNextRender = true;
   var editingTemplate = undefined;
   var templateRows = {};
@@ -635,7 +630,6 @@ button.wt-raise { cursor: pointer; }
       var clickAttr = readOnly ? "" : ' data-action="edit-set" data-arg="' + key + '"';
       return '<span class="' + cls + '"' + clickAttr + '>' + (showPR ? ICON.star + " " : "") +
         '<b class="wt-chip-w">' + weightLabel(set.weight) + '</b><span class="wt-chip-u">' + (set.weight === 0 ? "" : "kg ") + '× ' + set.reps + '</span>' +
-        (set.failed ? '<span class="wt-chip-fail" title="To failure">' + ICON.bolt + '</span>' : '') +
         (readOnly ? "" : '<button class="wt-chip-x" data-action="delete-set" data-arg="' + entryIdx + ":" + si + '" aria-label="Delete set">' + ICON.close.replace('width="16" height="16"', 'width="10" height="10"') + '</button>') +
         '</span>';
     }).join("") + "</div>";
@@ -784,7 +778,6 @@ button.wt-raise { cursor: pointer; }
       var wVal = isEditingHere ? fmtKg(entry.sets[editingSI].weight) : (suggested !== null && suggested !== undefined ? fmtKg(suggested) : "");
       var rVal = isEditingHere ? entry.sets[editingSI].reps : "";
       var blockColor = draft.dayColor ? DAY_COLORS[draft.dayColor] : "var(--border)";
-      var failOn = !!failFlags[idx];
 
       var raiseBanner = (raise && !entry.sets.length && !isEditingHere)
         ? '<button class="wt-raise" data-action="use-weight" data-arg="' + idx + ':' + raise.weight + '">' + ICON.up +
@@ -809,7 +802,6 @@ button.wt-raise { cursor: pointer; }
         '<div class="wt-set-form">' +
         '<input class="wt-input wt-input-num" type="number" inputmode="decimal" placeholder="kg" id="w-input-' + idx + '"' + (wVal !== "" ? ' value="' + wVal + '"' : '') + '>' +
         '<input class="wt-input wt-input-num" type="number" inputmode="numeric" placeholder="reps" id="r-input-' + idx + '"' + (isEditingHere ? ' value="' + rVal + '"' : '') + '>' +
-        '<button class="wt-fail-toggle' + (failOn ? ' on' : '') + '" data-action="toggle-fail" data-arg="' + idx + '" aria-pressed="' + failOn + '" aria-label="Set was to failure">' + ICON.bolt + '<span>Fail</span></button>' +
         '<button class="wt-add-set-btn" data-action="' + (isEditingHere ? "update-set" : "add-set") + '" data-arg="' + (isEditingHere ? idx + ":" + editingSI : idx) + '">' + ICON.plus + (isEditingHere ? ' Update' : ' Add') + '</button>' +
         '</div>' +
         '<div class="wt-hint-row">' + nextChip + (best > 0 ? '<span class="wt-best-hint">Best ' + fmtKg(best) + ' kg</span>' : '') + '</div>' +
@@ -1090,17 +1082,15 @@ button.wt-raise { cursor: pointer; }
       }) : []
     };
     editingSet = null;
-    failFlags = {};
     animateNextRender = true;
     saveData(); render();
   }
-  function cancelWorkout() { data.draft = null; editingSet = null; failFlags = {}; saveData(); setView("home"); render(); }
+  function cancelWorkout() { data.draft = null; editingSet = null; saveData(); setView("home"); render(); }
   function finishWorkout() {
     if (sessionSetCount(data.draft) === 0) return;
     data.sessions.push(data.draft);
     data.draft = null;
     editingSet = null;
-    failFlags = {};
     saveData();
     setView("history");
     showToast("Workout saved");
@@ -1119,7 +1109,7 @@ button.wt-raise { cursor: pointer; }
     var entry = data.draft.entries[idx];
     var best = bestWeightFor(entry.exerciseName);
     var isPR = best > 0 && w > best;
-    entry.sets.push({ weight: w, reps: r, isPR: isPR, failed: !!failFlags[idx] });
+    entry.sets.push({ weight: w, reps: r, isPR: isPR });
     lastAddedChip = idx + ":" + (entry.sets.length - 1);
     saveData();
     if (isPR) showToast("New personal best — " + w + "kg"); else render();
@@ -1130,7 +1120,7 @@ button.wt-raise { cursor: pointer; }
     if (!last) return;
     var best = bestWeightFor(entry.exerciseName);
     var isPR = best > 0 && last.weight > best;
-    entry.sets.push({ weight: last.weight, reps: last.reps, isPR: isPR, failed: !!last.failed });
+    entry.sets.push({ weight: last.weight, reps: last.reps, isPR: isPR });
     lastAddedChip = idx + ":" + (entry.sets.length - 1);
     saveData();
     if (isPR) showToast("New personal best — " + last.weight + "kg"); else render();
@@ -1150,7 +1140,7 @@ button.wt-raise { cursor: pointer; }
     var entry = data.draft.entries[idx];
     var best = bestWeightFor(entry.exerciseName);
     var isPR = best > 0 && w > best;
-    entry.sets[si] = { weight: w, reps: r, isPR: isPR, failed: !!failFlags[idx] };
+    entry.sets[si] = { weight: w, reps: r, isPR: isPR };
     editingSet = null;
     saveData();
     if (isPR) showToast("New personal best — " + w + "kg"); else render();
@@ -1292,17 +1282,7 @@ button.wt-raise { cursor: pointer; }
     else if (action === "finish-workout") finishWorkout();
     else if (action === "add-set") addSet(+arg);
     else if (action === "update-set") updateSet(arg);
-    else if (action === "edit-set") {
-      var ep = arg.split(":");
-      var es = data.draft.entries[+ep[0]].sets[+ep[1]];
-      failFlags[+ep[0]] = !!(es && es.failed);
-      editingSet = arg; render();
-    }
-    else if (action === "toggle-fail") {
-      failFlags[arg] = !failFlags[arg];
-      el.classList.toggle("on", !!failFlags[arg]);
-      el.setAttribute("aria-pressed", failFlags[arg] ? "true" : "false");
-    }
+    else if (action === "edit-set") { editingSet = arg; render(); }
     else if (action === "use-weight") {
       var uw = arg.split(":");
       var wInput = document.getElementById("w-input-" + uw[0]);
