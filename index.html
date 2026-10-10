@@ -459,6 +459,8 @@ button.wt-raise { cursor: pointer; }
     return best;
   }
   function fmtKg(n) { return String(Math.round(n * 100) / 100); }
+  // 0 kg is a bodyweight set (pull-ups, dips, abs).
+  function weightLabel(n) { return n === 0 ? "BW" : fmtKg(n); }
   function weightStep() { var s = data.settings && +data.settings.weightStep; return s > 0 ? s : 2; }
   function roundToStep(x) { var st = weightStep(); return Math.round(x / st) * st; }
   // The most recent finished session that included this exercise.
@@ -632,7 +634,7 @@ button.wt-raise { cursor: pointer; }
       var cls = "wt-chip" + (ghost ? " wt-chip-ghost" : "") + (showPR ? " wt-chip-pr" : "") + (isNew ? " wt-chip-pop" : "") + (isNew && set.isPR ? " wt-chip-pr-new" : "") + (isEditing ? " wt-chip-editing" : "");
       var clickAttr = readOnly ? "" : ' data-action="edit-set" data-arg="' + key + '"';
       return '<span class="' + cls + '"' + clickAttr + '>' + (showPR ? ICON.star + " " : "") +
-        '<b class="wt-chip-w">' + fmtKg(set.weight) + '</b><span class="wt-chip-u">kg × ' + set.reps + '</span>' +
+        '<b class="wt-chip-w">' + weightLabel(set.weight) + '</b><span class="wt-chip-u">' + (set.weight === 0 ? "" : "kg ") + '× ' + set.reps + '</span>' +
         (set.failed ? '<span class="wt-chip-fail" title="To failure">' + ICON.bolt + '</span>' : '') +
         (readOnly ? "" : '<button class="wt-chip-x" data-action="delete-set" data-arg="' + entryIdx + ":" + si + '" aria-label="Delete set">' + ICON.close.replace('width="16" height="16"', 'width="10" height="10"') + '</button>') +
         '</span>';
@@ -779,7 +781,7 @@ button.wt-raise { cursor: pointer; }
         if (+parts[0] === idx) editingSI = +parts[1];
       }
       var isEditingHere = editingSI !== null;
-      var wVal = isEditingHere ? fmtKg(entry.sets[editingSI].weight) : (suggested ? fmtKg(suggested) : "");
+      var wVal = isEditingHere ? fmtKg(entry.sets[editingSI].weight) : (suggested !== null && suggested !== undefined ? fmtKg(suggested) : "");
       var rVal = isEditingHere ? entry.sets[editingSI].reps : "";
       var blockColor = draft.dayColor ? DAY_COLORS[draft.dayColor] : "var(--border)";
       var failOn = !!failFlags[idx];
@@ -1113,7 +1115,7 @@ button.wt-raise { cursor: pointer; }
   function addSet(idx) {
     var w = parseFloat(document.getElementById("w-input-" + idx).value);
     var r = parseInt(document.getElementById("r-input-" + idx).value, 10);
-    if (!w || !r) return;
+    if (isNaN(w) || w < 0 || !r) return;
     var entry = data.draft.entries[idx];
     var best = bestWeightFor(entry.exerciseName);
     var isPR = best > 0 && w > best;
@@ -1144,7 +1146,7 @@ button.wt-raise { cursor: pointer; }
     var parts = arg.split(":"); var idx = +parts[0], si = +parts[1];
     var w = parseFloat(document.getElementById("w-input-" + idx).value);
     var r = parseInt(document.getElementById("r-input-" + idx).value, 10);
-    if (!w || !r) return;
+    if (isNaN(w) || w < 0 || !r) return;
     var entry = data.draft.entries[idx];
     var best = bestWeightFor(entry.exerciseName);
     var isPR = best > 0 && w > best;
