@@ -291,30 +291,32 @@ button.wt-raise { cursor: pointer; }
 
   var SEED_TEMPLATES = [
     { id: "push-day", name: "Push Day", color: "push", exercises: [
-      { name: "Walking Lunges", targetSets: 3, repMin: 10, repMax: 12 },
-      { name: "Flat Bench Press", targetSets: 4, repMin: 8, repMax: 10 },
-      { name: "Machine Fly / Cables", targetSets: 3, repMin: 8, repMax: 10 },
-      { name: "Seated Dumbbell Press", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Dips", targetSets: 3, repMin: 10, repMax: 15 },
-      { name: "Abs", targetSets: 3, repMin: 10, repMax: 15 }
+      { name: "Incline DB Press", targetSets: 3, repMin: 6, repMax: 10, note: "key lift" },
+      { name: "Walking Lunges", targetSets: 3, repMin: 10, repMax: 12, note: "2-3 RIR" },
+      { name: "Machine Shoulder Press", targetSets: 3, repMin: 6, repMax: 10, note: "key lift" },
+      { name: "Lateral Raises", targetSets: 3, repMin: 10, repMax: 15, note: "chest on incline bench" },
+      { name: "Rope Pushdown", targetSets: 3, repMin: 12, repMax: 15, note: "elbows pinned" },
+      { name: "Decline Crunch", targetSets: 3, repMin: 8, repMax: 15, note: "weighted, curl spine" }
     ]},
     { id: "pull-day", name: "Pull Day", color: "pull", exercises: [
-      { name: "Goblet Squat", targetSets: 3, repMin: 10, repMax: 12 },
-      { name: "Pull-downs", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Machine Rows", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Face Pulls", targetSets: 3, repMin: 15, repMax: 20 },
-      { name: "Biceps Curls", targetSets: 3, repMin: 10, repMax: 15 },
-      { name: "Abs", targetSets: 3, repMin: 10, repMax: 15 }
+      { name: "Pull-Ups", targetSets: 3, repMin: 6, repMax: 10, note: "weighted" },
+      { name: "Machine Rows", targetSets: 3, repMin: 6, repMax: 10, note: "one handle per arm" },
+      { name: "Seated Leg Curls", targetSets: 3, repMin: 8, repMax: 12, note: "2-3 RIR" },
+      { name: "Face Pulls", targetSets: 3, repMin: 15, repMax: 20, note: "elbows high, pause" },
+      { name: "Biceps Curls", targetSets: 3, repMin: 6, repMax: 10 },
+      { name: "Decline Crunch", targetSets: 3, repMin: 8, repMax: 15, note: "weighted, curl spine" }
     ]},
     { id: "mix-day", name: "Mix Day", color: "mix", exercises: [
-      { name: "DB RDL", targetSets: 3, repMin: 6, repMax: 10 },
-      { name: "Incline DB Press", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Bulgarian Split Squats", targetSets: 3, repMin: 10, repMax: 12 },
-      { name: "Pull-Ups", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Lateral Raises", targetSets: 3, repMin: 15, repMax: 20 },
-      { name: "Abs", targetSets: 3, repMin: 10, repMax: 15 }
+      { name: "Flat Bench Press", targetSets: 3, repMin: 6, repMax: 10 },
+      { name: "Pull-downs", targetSets: 3, repMin: 6, repMax: 10 },
+      { name: "Pec Deck", targetSets: 3, repMin: 6, repMax: 10 },
+      { name: "Lateral Raises", targetSets: 3, repMin: 10, repMax: 15, note: "chest on incline bench" },
+      { name: "Bulgarian Split Squats", targetSets: 3, repMin: 8, repMax: 12, note: "2-3 RIR" },
+      { name: "Decline Crunch", targetSets: 3, repMin: 8, repMax: 15, note: "weighted, curl spine" }
     ]}
   ];
+  // Bump when SEED_TEMPLATES changes so saved Push/Pull/Mix plans get the new exercises.
+  var PLAN_VERSION = 2;
   var SEED_EXERCISES = Array.from(new Set(SEED_TEMPLATES.flatMap(function (t) { return t.exercises.map(function (e) { return e.name; }); })));
   var DEFAULT_DATA = { exercises: SEED_EXERCISES, templates: SEED_TEMPLATES, sessions: [], draft: null, goals: { sessions: 4, sets: 60 }, exerciseEmoji: {}, settings: { weightStep: 2 } };
 
@@ -382,6 +384,7 @@ button.wt-raise { cursor: pointer; }
 
   // ---------- state ----------
   var data = loadData();
+  saveData();
   var view = "home";
   var resetArmed = false, resetTimer = null;
   var deleteArmedId = null, deleteTimer = null;
@@ -407,6 +410,17 @@ button.wt-raise { cursor: pointer; }
   // Brings older saved data up to date: adds settings and drops the old "x2" note on Abs.
   function migrate(d) {
     d.settings = Object.assign({ weightStep: 2 }, d.settings || {});
+    if ((d.planVersion || 1) < PLAN_VERSION) {
+      // Replace each day's exercises with the new plan, keeping the saved plan's id and name.
+      SEED_TEMPLATES.forEach(function (seed) {
+        var t = (d.templates || []).find(function (x) { return x.color === seed.color; });
+        var fresh = JSON.parse(JSON.stringify(seed.exercises));
+        if (t) t.exercises = fresh;
+        else d.templates = (d.templates || []).concat([JSON.parse(JSON.stringify(seed))]);
+      });
+      d.exercises = Array.from(new Set((d.exercises || []).concat(SEED_EXERCISES)));
+      d.planVersion = PLAN_VERSION;
+    }
     var legacyNote = /^\s*[×x]\s*2\s*$/i;
     (d.templates || []).forEach(function (t) {
       (t.exercises || []).forEach(function (e) { if (e.note && legacyNote.test(e.note)) delete e.note; });
