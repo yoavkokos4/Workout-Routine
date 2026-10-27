@@ -1,6 +1,6 @@
 // Training Log — minimal offline app-shell cache.
 // Bump CACHE_NAME whenever index.html changes so users pick up the new version.
-var CACHE_NAME = "training-log-v6";
+var CACHE_NAME = "training-log-v7";
 var SHELL = [
   "./",
   "./index.html",
