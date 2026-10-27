@@ -300,7 +300,7 @@ button.wt-raise { cursor: pointer; }
     ]},
     { id: "pull-day", name: "Pull Day", color: "pull", exercises: [
       { name: "Pull-Ups", targetSets: 3, repMin: 6, repMax: 10, note: "weighted" },
-      { name: "Machine Rows", targetSets: 3, repMin: 6, repMax: 10, note: "one handle per arm" },
+      { name: "Single-Arm Cable Row", targetSets: 3, repMin: 8, repMax: 10, note: "per arm; pulley at chest height, pull to waist" },
       { name: "Seated Leg Curls", targetSets: 3, repMin: 8, repMax: 12, note: "2-3 RIR" },
       { name: "Face Pulls", targetSets: 3, repMin: 15, repMax: 20, note: "elbows high, pause" },
       { name: "Biceps Curls", targetSets: 3, repMin: 6, repMax: 10 },
@@ -316,7 +316,7 @@ button.wt-raise { cursor: pointer; }
     ]}
   ];
   // Bump when SEED_TEMPLATES changes so saved Push/Pull/Mix plans get the new exercises.
-  var PLAN_VERSION = 2;
+  var PLAN_VERSION = 3;
   var SEED_EXERCISES = Array.from(new Set(SEED_TEMPLATES.flatMap(function (t) { return t.exercises.map(function (e) { return e.name; }); })));
   var DEFAULT_DATA = { exercises: SEED_EXERCISES, templates: SEED_TEMPLATES, sessions: [], draft: null, goals: { sessions: 4, sets: 60 }, exerciseEmoji: {}, settings: { weightStep: 2 } };
 
