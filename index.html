@@ -291,32 +291,32 @@ button.wt-raise { cursor: pointer; }
 
   var SEED_TEMPLATES = [
     { id: "push-day", name: "Push Day", color: "push", exercises: [
-      { name: "Incline DB Press", targetSets: 3, repMin: 6, repMax: 10, note: "key lift" },
-      { name: "Walking Lunges", targetSets: 3, repMin: 10, repMax: 12, note: "2-3 RIR" },
-      { name: "Machine Shoulder Press", targetSets: 3, repMin: 6, repMax: 10, note: "key lift" },
-      { name: "Lateral Raises", targetSets: 3, repMin: 10, repMax: 15, note: "chest on incline bench" },
-      { name: "Rope Pushdown", targetSets: 3, repMin: 12, repMax: 15, note: "elbows pinned" },
-      { name: "Decline Crunch", targetSets: 3, repMin: 8, repMax: 15, note: "weighted, curl spine" }
+      { name: "Incline DB Press", targetSets: 3, repMin: 6, repMax: 10, note: "key lift, rest 2-3 min" },
+      { name: "Walking Lunges", targetSets: 3, repMin: 8, repMax: 10, note: "2-3 RIR" },
+      { name: "Machine Shoulder Press", targetSets: 3, repMin: 6, repMax: 10, note: "key lift, rest 2-3 min" },
+      { name: "Lateral Raises", targetSets: 3, repMin: 10, repMax: 15 },
+      { name: "Triceps Pushdown (back-supported)", targetSets: 3, repMin: 8, repMax: 12, note: "back on pad" },
+      { name: "Decline Crunch", targetSets: 3, repMin: 8, repMax: 12, note: "weighted, curl spine" }
     ]},
     { id: "pull-day", name: "Pull Day", color: "pull", exercises: [
-      { name: "Pull-Ups", targetSets: 3, repMin: 6, repMax: 10, note: "weighted" },
-      { name: "Machine Rows", targetSets: 3, repMin: 6, repMax: 10, note: "one handle per arm" },
-      { name: "Seated Leg Curls", targetSets: 3, repMin: 8, repMax: 12, note: "2-3 RIR" },
-      { name: "Face Pulls", targetSets: 3, repMin: 15, repMax: 20, note: "elbows high, pause" },
+      { name: "Pull-Ups", targetSets: 3, repMin: 6, repMax: 10, note: "weighted, neutral grip, rest 2-3 min" },
+      { name: "Chest-Supported T-Bar Row", targetSets: 3, repMin: 6, repMax: 10, note: "neutral handles, chest stays on pad" },
+      { name: "Seated Leg Curls", targetSets: 3, repMin: 8, repMax: 10, note: "2-3 RIR" },
+      { name: "Reverse Pec Deck", targetSets: 3, repMin: 8, repMax: 12, note: "lead with elbows" },
       { name: "Biceps Curls", targetSets: 3, repMin: 6, repMax: 10 },
-      { name: "Decline Crunch", targetSets: 3, repMin: 8, repMax: 15, note: "weighted, curl spine" }
+      { name: "Decline Crunch", targetSets: 3, repMin: 8, repMax: 12, note: "weighted, curl spine" }
     ]},
     { id: "mix-day", name: "Mix Day", color: "mix", exercises: [
-      { name: "Flat Bench Press", targetSets: 3, repMin: 6, repMax: 10 },
-      { name: "Pull-downs", targetSets: 3, repMin: 6, repMax: 10 },
+      { name: "Flat Bench Press", targetSets: 3, repMin: 6, repMax: 10, note: "key lift, rest 2-3 min" },
+      { name: "Pull-downs", targetSets: 3, repMin: 6, repMax: 10, note: "overhand, pause, slow down" },
       { name: "Pec Deck", targetSets: 3, repMin: 6, repMax: 10 },
       { name: "Lateral Raises", targetSets: 3, repMin: 10, repMax: 15, note: "chest on incline bench" },
-      { name: "Bulgarian Split Squats", targetSets: 3, repMin: 8, repMax: 12, note: "2-3 RIR" },
-      { name: "Decline Crunch", targetSets: 3, repMin: 8, repMax: 15, note: "weighted, curl spine" }
+      { name: "Bulgarian Split Squats", targetSets: 3, repMin: 8, repMax: 10, note: "2-3 RIR" },
+      { name: "Decline Crunch", targetSets: 3, repMin: 8, repMax: 12, note: "weighted, curl spine" }
     ]}
   ];
   // Bump when SEED_TEMPLATES changes so saved Push/Pull/Mix plans get the new exercises.
-  var PLAN_VERSION = 4;
+  var PLAN_VERSION = 5;
   var SEED_EXERCISES = Array.from(new Set(SEED_TEMPLATES.flatMap(function (t) { return t.exercises.map(function (e) { return e.name; }); })));
   var DEFAULT_DATA = { exercises: SEED_EXERCISES, templates: SEED_TEMPLATES, sessions: [], draft: null, goals: { sessions: 4, sets: 60 }, exerciseEmoji: {}, settings: { weightStep: 2 } };
 
@@ -407,6 +407,17 @@ button.wt-raise { cursor: pointer; }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); }
   function setView(v) { view = v; animateNextRender = true; }
 
+  // Plan v5 swapped machines: sets logged since Nov 7, 2026 under the old names were already done on the new machines.
+  function renameLoggedExercises(d) {
+    var since = "2026-11-07";
+    var renames = { "Machine Rows": "Chest-Supported T-Bar Row", "Face Pulls": "Reverse Pec Deck", "Rope Pushdown": "Triceps Pushdown (back-supported)" };
+    (d.sessions || []).forEach(function (s) {
+      if (!s.date || s.date.slice(0, 10) < since) return;
+      (s.entries || []).forEach(function (e) { if (renames[e.exerciseName]) e.exerciseName = renames[e.exerciseName]; });
+    });
+    if (d.draft && d.draft.entries) d.draft.entries.forEach(function (e) { if (renames[e.exerciseName]) e.exerciseName = renames[e.exerciseName]; });
+  }
+
   // Brings older saved data up to date: adds settings and drops the old "x2" note on Abs.
   function migrate(d) {
     d.settings = Object.assign({ weightStep: 2 }, d.settings || {});
@@ -418,6 +429,7 @@ button.wt-raise { cursor: pointer; }
         if (t) t.exercises = fresh;
         else d.templates = (d.templates || []).concat([JSON.parse(JSON.stringify(seed))]);
       });
+      if ((d.planVersion || 1) < 5) renameLoggedExercises(d);
       d.exercises = Array.from(new Set((d.exercises || []).concat(SEED_EXERCISES)));
       d.planVersion = PLAN_VERSION;
     }
