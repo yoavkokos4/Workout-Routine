@@ -293,7 +293,7 @@ button.wt-raise { cursor: pointer; }
     { id: "push-day", name: "Push Day", color: "push", exercises: [
       { name: "Incline DB Press", targetSets: 3, repMin: 6, repMax: 10, note: "key lift, rest 2-3 min" },
       { name: "Walking Lunges", targetSets: 3, repMin: 8, repMax: 10, note: "2-3 RIR" },
-      { name: "Machine Shoulder Press", targetSets: 3, repMin: 6, repMax: 10, note: "key lift, rest 2-3 min" },
+      { name: "Seated DB Shoulder Press", targetSets: 3, repMin: 6, repMax: 10, note: "key lift, neutral grip, rest 2-3 min" },
       { name: "Lateral Raises", targetSets: 3, repMin: 10, repMax: 15 },
       { name: "Triceps Pushdown (back-supported)", targetSets: 3, repMin: 8, repMax: 12, note: "back on pad" },
       { name: "Decline Crunch", targetSets: 3, repMin: 8, repMax: 12, note: "weighted, curl spine" }
@@ -316,7 +316,7 @@ button.wt-raise { cursor: pointer; }
     ]}
   ];
   // Bump when SEED_TEMPLATES changes so saved Push/Pull/Mix plans get the new exercises.
-  var PLAN_VERSION = 5;
+  var PLAN_VERSION = 6;
   var SEED_EXERCISES = Array.from(new Set(SEED_TEMPLATES.flatMap(function (t) { return t.exercises.map(function (e) { return e.name; }); })));
   var DEFAULT_DATA = { exercises: SEED_EXERCISES, templates: SEED_TEMPLATES, sessions: [], draft: null, goals: { sessions: 4, sets: 60 }, exerciseEmoji: {}, settings: { weightStep: 2 } };
 
