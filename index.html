@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>Training Log</title>
+<title>Pump</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Training Log">
+<meta name="apple-mobile-web-app-title" content="Pump">
 <meta name="theme-color" content="#FBF7F1">
 <meta name="description" content="A minimal, personal workout tracker — log sets, plan training days, and follow your progress over time.">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=2">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
@@ -193,6 +193,40 @@ svg { display: block; }
 .wt-segmented button { flex: 1; background: none; border: none; border-inline-end: 1px solid var(--border); color: var(--dim); font-family: inherit; font-size: 11.5px; padding: 9px 4px; cursor: pointer; transition: background-color .15s ease, color .15s ease; }
 .wt-segmented button:last-child { border-inline-end: none; }
 .wt-segmented button.active { background: var(--surface-2); color: var(--text); }
+
+/* ---- workout cards (set rows) ---- */
+.wt-excard { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; margin-bottom: 12px; overflow: hidden; transition: box-shadow .2s ease, border-color .2s ease; }
+.wt-excard-open { border-color: var(--accent); box-shadow: 0 10px 28px rgba(43,38,32,.10); }
+.wt-excard-done { background: var(--surface-2); border-color: transparent; }
+.wt-ex-head { display: flex; align-items: center; gap: 12px; padding: 14px 14px 14px 16px; cursor: pointer; }
+.wt-ex-emoji { font-size: 26px; line-height: 1; }
+.wt-ex-titlebox { flex: 1; min-width: 0; }
+.wt-ex-titlebox .wt-target { margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wt-ex-chev { color: var(--faint); display: flex; }
+.wt-ex-check { width: 24px; height: 24px; border-radius: 50%; background: var(--pr); color: #fff; display: flex; align-items: center; justify-content: center; }
+.wt-ex-body { padding: 2px 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.wt-ex-anim { animation: wtFadeUp .3s cubic-bezier(.16,.8,.3,1); }
+.wt-setrow { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 12px; width: 100%; border: none; font-family: inherit; text-align: left; }
+.wt-setrow-done { background: rgba(30,142,95,.10); color: var(--text); cursor: pointer; }
+.wt-setrow-pending { background: transparent; border: 1px dashed var(--border); color: var(--faint); }
+.wt-setnum { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px; flex-shrink: 0; }
+.wt-setnum-done { background: var(--pr); border-color: var(--pr); color: #fff; }
+.wt-setval { font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 500; flex: 1; }
+.wt-setval small { font-size: 11px; opacity: .6; margin-left: 2px; }
+.wt-setpr { color: var(--pr); font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
+.wt-setedit { font-size: 11px; color: var(--faint); }
+.wt-editor { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 14px 12px 12px; }
+.wt-editor-hint { font-size: 12px; font-weight: 500; color: var(--dim); text-align: center; margin: 0 0 12px; }
+.wt-editor .wt-steppers { margin-top: 0; }
+.wt-editor .wt-step-btn { width: 38px; height: 38px; border-radius: 50%; align-self: center; font-size: 20px; }
+.wt-editor .wt-stepper { align-items: center; }
+.wt-stepper-mid { flex: 1; text-align: center; min-width: 0; }
+.wt-big-input { width: 100%; background: transparent; border: none; text-align: center; font-family: 'Fraunces', serif; font-size: 34px; font-weight: 500; color: var(--text); padding: 0; outline: none; -moz-appearance: textfield; }
+.wt-big-input::-webkit-outer-spin-button, .wt-big-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.wt-unit { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-top: -2px; }
+.wt-log-btn { width: 100%; margin-top: 14px; border: none; border-radius: 999px; background: var(--accent); color: var(--accent-ink); padding: 14px; font-family: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: transform .1s ease; }
+.wt-log-btn:active { transform: scale(.97); }
+.wt-editor-actions { display: flex; justify-content: space-between; margin-top: 12px; padding: 0 4px; }
 
 /* ---- steppers, rest bar, plan cards ---- */
 .wt-steppers { display: flex; gap: 10px; margin-top: 10px; }
@@ -711,7 +745,7 @@ svg { display: block; }
     }).join("");
 
     return '<div class="wt-screen">' +
-      '<div class="wt-eyebrow">Training Log</div>' +
+      '<div class="wt-eyebrow">Pump</div>' +
       '<h1 class="wt-display">' + greeting + '</h1>' +
       (last
         ? '<p class="wt-subtle">Last session ' + daysAgoText(last.date).toLowerCase() + ' · ' + sessionVolume(last).toLocaleString() + 'kg moved</p>'
@@ -781,6 +815,79 @@ svg { display: block; }
       '<button class="wt-filter-chip' + (isCustom ? " wt-filter-chip-active" : "") + '" data-action="custom-step">' + (isCustom ? cur + "kg" : "Custom") + '</button></div>';
   }
 
+  // ---------- workout cards: set rows instead of a form ----------
+  var openEx = null, exAnim = null;
+  function exDone(e) { return e.target && e.target.sets ? e.sets.length >= e.target.sets : e.sets.length > 0; }
+  function currentOpen(draft) {
+    if (openEx === -2) return -1;
+    if (openEx !== null && openEx < draft.entries.length) return openEx;
+    for (var i = 0; i < draft.entries.length; i++) if (!exDone(draft.entries[i])) return i;
+    return -1;
+  }
+  function setRowDone(idx, si, st) {
+    return '<button class="wt-setrow wt-setrow-done" data-action="edit-set" data-arg="' + idx + ':' + si + '">' +
+      '<span class="wt-setnum wt-setnum-done">' + ICON.check + '</span>' +
+      '<span class="wt-setval">' + st.weight + '<small>kg</small> × ' + st.reps + '</span>' +
+      (st.isPR ? '<span class="wt-setpr">' + ICON.star + ' PR</span>' : '') +
+      '<span class="wt-setedit">Edit</span></button>';
+  }
+  function setRowPending(n, w, r) {
+    return '<div class="wt-setrow wt-setrow-pending"><span class="wt-setnum">' + n + '</span>' +
+      '<span class="wt-setval">' + (w !== "" ? w + '<small>kg</small> × ' + r : '— × —') + '</span></div>';
+  }
+  function editorHtml(entry, idx, si) {
+    var editing = si !== null;
+    var prev = lastSetFor(entry.exerciseName, entry);
+    var prog = (!editing && !entry.sets.length) ? progressionFor(entry) : null;
+    var src = editing ? entry.sets[si] : (prog || prev);
+    var w = src ? src.weight : "", r = src ? src.reps : "";
+    var hint = editing ? '' : (prog ? '⬆️ You hit ' + entry.target.repMax + '+ reps on every set — try ' + prog.weight + 'kg'
+      : (prev ? 'Last time — ' + prev.weight + 'kg × ' + prev.reps : ''));
+    var n = editing ? si + 1 : entry.sets.length + 1;
+    var extra = !editing && entry.target && entry.sets.length >= entry.target.sets;
+    return '<div class="wt-editor">' +
+      (hint ? '<div class="wt-editor-hint">' + hint + '</div>' : '') +
+      '<div class="wt-steppers">' +
+      '<div class="wt-stepper"><button class="wt-step-btn" data-action="step" data-arg="' + idx + ':w:-1">−</button>' +
+      '<div class="wt-stepper-mid"><input class="wt-big-input" type="number" inputmode="decimal" step="any" placeholder="0" id="w-input-' + idx + '"' + (src ? ' value="' + w + '"' : '') + '><span class="wt-unit">kg</span></div>' +
+      '<button class="wt-step-btn" data-action="step" data-arg="' + idx + ':w:1">+</button></div>' +
+      '<div class="wt-stepper"><button class="wt-step-btn" data-action="step" data-arg="' + idx + ':r:-1">−</button>' +
+      '<div class="wt-stepper-mid"><input class="wt-big-input" type="number" inputmode="numeric" placeholder="0" id="r-input-' + idx + '"' + (src ? ' value="' + r + '"' : '') + '><span class="wt-unit">reps</span></div>' +
+      '<button class="wt-step-btn" data-action="step" data-arg="' + idx + ':r:1">+</button></div>' +
+      '</div>' +
+      '<button class="wt-log-btn" data-action="' + (editing ? "update-set" : "add-set") + '" data-arg="' + (editing ? idx + ":" + si : idx) + '">' +
+      ICON.check.replace('width="10" height="10"', 'width="16" height="16"') + (editing ? ' Update set ' + n : (extra ? ' Log extra set' : ' Log set ' + n)) + '</button>' +
+      (editing ? '<div class="wt-editor-actions"><button class="wt-text-link" data-action="cancel-edit-set">Cancel</button><button class="wt-text-link" data-action="delete-set" data-arg="' + idx + ':' + si + '">Delete set</button></div>' : '') +
+      '</div>';
+  }
+  function exBlockHtml(entry, idx, open) {
+    var t = targetText(entry);
+    var done = exDone(entry);
+    var editingSI = null;
+    if (editingSet) { var pp = editingSet.split(":"); if (+pp[0] === idx) editingSI = +pp[1]; }
+    var head = '<div class="wt-ex-head" data-action="toggle-ex" data-arg="' + idx + '">' +
+      '<span class="wt-ex-emoji">' + emojiFor(entry.exerciseName) + '</span>' +
+      '<div class="wt-ex-titlebox"><div class="wt-exblock-title">' + esc(entry.exerciseName) + '</div>' +
+      '<div class="wt-target">' + (done && !open ? '✓ ' + entry.sets.length + ' sets · ' + entry.sets.map(function (x) { return x.weight + '×' + x.reps; }).join(' · ')
+        : (t ? esc(t) : (entry.sets.length + ' sets'))) + '</div></div>' +
+      (open ? '<button class="wt-icon-btn-quiet" data-action="remove-exercise" data-arg="' + idx + '">' + ICON.trash + '</button>' : (done ? '<span class="wt-ex-check">' + ICON.check + '</span>' : '<span class="wt-ex-chev">' + ICON.chevDown + '</span>')) +
+      '</div>';
+    var body = '';
+    if (open) {
+      var rows = '';
+      entry.sets.forEach(function (st, si) { rows += editingSI === si ? editorHtml(entry, idx, si) : setRowDone(idx, si, st); });
+      var planned = entry.target ? entry.target.sets : 0;
+      var prevSet = lastSetFor(entry.exerciseName, entry);
+      var prog = !entry.sets.length ? progressionFor(entry) : null;
+      var ref = prog || (entry.sets.length ? entry.sets[entry.sets.length - 1] : prevSet);
+      if (editingSI === null) rows += editorHtml(entry, idx, null);
+      for (var n = entry.sets.length + (editingSI === null ? 1 : 0); n < planned; n++) rows += setRowPending(n + 1, ref ? ref.weight : "", ref ? ref.reps : "");
+      var best = bestWeightFor(entry.exerciseName);
+      body = '<div class="wt-ex-body' + (exAnim === idx ? ' wt-ex-anim' : '') + '">' + rows + (best > 0 ? '<div class="wt-best-hint">Best so far — ' + best + 'kg</div>' : '') + '</div>';
+    }
+    return '<div class="wt-excard' + (open ? ' wt-excard-open' : '') + (done && !open ? ' wt-excard-done' : '') + '">' + head + body + '</div>';
+  }
+
   function renderWorkout() {
     var draft = data.draft;
     var usedNames = {};
@@ -795,43 +902,9 @@ svg { display: block; }
         ? '<b>' + totalSets + ' of ' + totalTarget + '</b> planned sets logged.'
         : (totalSets > 0 ? '<b>' + totalSets + '</b> sets logged so far.' : 'No sets logged yet.')) + '</div></div>';
 
-    var blocks = draft.entries.map(function (entry, idx) {
-      var t = targetText(entry);
-      var best = bestWeightFor(entry.exerciseName);
-      var editingSI = null;
-      if (editingSet) {
-        var parts = editingSet.split(":");
-        if (+parts[0] === idx) editingSI = +parts[1];
-      }
-      var isEditingHere = editingSI !== null;
-      var prev = lastSetFor(entry.exerciseName, entry);
-      var prog = (!isEditingHere && !entry.sets.length) ? progressionFor(entry) : null;
-      var src = isEditingHere ? entry.sets[editingSI] : (prog || prev);
-      var wVal = src ? src.weight : "";
-      var rVal = src ? src.reps : "";
-      var hasVals = !!src;
-      var lastHint = prog ? '⬆️ You hit ' + entry.target.repMax + '+ reps on every set — try ' + prog.weight + 'kg' : (prev ? 'Last time — ' + prev.weight + 'kg × ' + prev.reps : '');
-      return '<div class="wt-exblock">' +
-        '<div class="wt-exblock-head"><div><div class="wt-exblock-title">' + emojiFor(entry.exerciseName) + ' ' + esc(entry.exerciseName) + '</div>' +
-        (t ? '<div class="wt-target">' + esc(t) + '</div>' : '') + '</div>' +
-        '<button class="wt-icon-btn-quiet" data-action="remove-exercise" data-arg="' + idx + '">' + ICON.trash + '</button></div>' +
-        (entry.sets.length ? chipsHtml(idx, entry.sets, false, editingSI) : '') +
-        '<div class="wt-steppers">' +
-        '<div class="wt-stepper"><button class="wt-step-btn" data-action="step" data-arg="' + idx + ':w:-1">−</button>' +
-        '<input class="wt-input wt-input-num" type="number" inputmode="decimal" step="any" placeholder="kg" id="w-input-' + idx + '"' + (hasVals ? ' value="' + wVal + '"' : '') + '>' +
-        '<button class="wt-step-btn" data-action="step" data-arg="' + idx + ':w:1">+</button></div>' +
-        '<div class="wt-stepper"><button class="wt-step-btn" data-action="step" data-arg="' + idx + ':r:-1">−</button>' +
-        '<input class="wt-input wt-input-num" type="number" inputmode="numeric" placeholder="reps" id="r-input-' + idx + '"' + (hasVals ? ' value="' + rVal + '"' : '') + '>' +
-        '<button class="wt-step-btn" data-action="step" data-arg="' + idx + ':r:1">+</button></div>' +
-        '</div>' +
-        '<button class="wt-add-set-btn wt-add-wide" data-action="' + (isEditingHere ? "update-set" : "add-set") + '" data-arg="' + (isEditingHere ? idx + ":" + editingSI : idx) + '">' + ICON.plus + (isEditingHere ? ' Update set' : ' Log set') + '</button>' +
-        (lastHint && !isEditingHere ? '<div class="wt-best-hint">' + lastHint + '</div>' : '') +
-        (isEditingHere ? '<button class="wt-text-link" style="margin-top:8px" data-action="cancel-edit-set">Cancel edit</button>' : '') +
-        (!isEditingHere && entry.sets.length ? '<button class="wt-duplicate-btn" data-action="duplicate-set" data-arg="' + idx + '">' + ICON.repeat + ' Repeat last set</button>' : '') +
-        (best > 0 ? '<div class="wt-best-hint">Best so far — ' + best + 'kg</div>' : '') +
-        '</div>';
-    }).join("");
-    lastAddedChip = null;
+    var openIdx = currentOpen(draft);
+    var blocks = draft.entries.map(function (entry, idx) { return exBlockHtml(entry, idx, idx === openIdx); }).join("");
+    lastAddedChip = null; exAnim = null;
 
     var quickChips = available.slice(0, 6).map(function (n) {
       return '<button class="wt-quick-add-chip" data-action="quick-add-exercise" data-arg="' + esc(n) + '">' + esc(n) + '</button>';
@@ -1105,12 +1178,12 @@ svg { display: block; }
           target: e.targetSets ? { sets: e.targetSets, repMin: e.repMin, repMax: e.repMax } : null };
       }) : []
     };
-    editingSet = null;
+    editingSet = null; openEx = null;
     animateNextRender = true;
     requestWake();
     saveData(); render();
   }
-  function cancelWorkout() { data.draft = null; editingSet = null; stopRest(); releaseWake(); saveData(); setView("home"); render(); }
+  function cancelWorkout() { data.draft = null; editingSet = null; openEx = null; stopRest(); releaseWake(); saveData(); setView("home"); render(); }
   function finishWorkout() {
     if (sessionSetCount(data.draft) === 0) return;
     data.sessions.push(data.draft);
@@ -1126,6 +1199,7 @@ svg { display: block; }
     var trimmed = (name || "").trim();
     if (!trimmed) return;
     data.draft.entries.push({ exerciseName: trimmed, sets: [], target: null, note: null });
+    openEx = data.draft.entries.length - 1; exAnim = openEx;
     if (data.exercises.indexOf(trimmed) === -1) data.exercises.push(trimmed);
     saveData(); render();
   }
@@ -1138,6 +1212,8 @@ svg { display: block; }
     var isPR = best > 0 && w > best;
     entry.sets.push({ weight: w, reps: r, isPR: isPR });
     lastAddedChip = idx + ":" + (entry.sets.length - 1);
+    if (navigator.vibrate) navigator.vibrate(15);
+    if (exDone(entry) && entry.target) { openEx = null; exAnim = currentOpen(data.draft); }
     saveData();
     startRest();
     if (isPR) { confetti(); showToast("New personal best — " + w + "kg"); } else render();
@@ -1160,7 +1236,7 @@ svg { display: block; }
     if (editingSet && +editingSet.split(":")[0] === idx) editingSet = null;
     saveData(); render();
   }
-  function removeExercise(idx) { data.draft.entries.splice(idx, 1); editingSet = null; saveData(); render(); }
+  function removeExercise(idx) { data.draft.entries.splice(idx, 1); editingSet = null; openEx = null; saveData(); render(); }
   function stepInput(arg) {
     var p = arg.split(":"); var idx = p[0], kind = p[1], dir = +p[2];
     var el = document.getElementById((kind === "w" ? "w-input-" : "r-input-") + idx);
@@ -1168,6 +1244,7 @@ svg { display: block; }
     var step = kind === "w" ? data.settings.step : 1;
     var v = (parseFloat(el.value) || 0) + dir * step;
     el.value = Math.max(0, Math.round(v * 100) / 100);
+    if (navigator.vibrate) navigator.vibrate(8);
   }
   function updateSet(arg) {
     var parts = arg.split(":"); var idx = +parts[0], si = +parts[1];
@@ -1280,7 +1357,7 @@ svg { display: block; }
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.href = url;
-    a.download = "training-log-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+    a.download = "pump-backup-" + new Date().toISOString().slice(0, 10) + ".json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1342,6 +1419,7 @@ svg { display: block; }
     else if (action === "set-history-range") { historyRange = arg; render(); }
     else if (action === "set-progress-exercise") { progressExercise = arg; render(); }
     else if (action === "save-goals") saveGoals();
+    else if (action === "toggle-ex") { var cur = currentOpen(data.draft); openEx = cur === +arg ? -2 : +arg; exAnim = openEx === -2 ? null : openEx; editingSet = null; render(); }
     else if (action === "start-next") { setView("workout"); startDraft(arg); }
     else if (action === "step") stepInput(arg);
     else if (action === "set-step") { data.settings.step = parseFloat(arg); saveData(); render(); }
