@@ -289,7 +289,7 @@ svg { display: block; }
       { name: "Seated DB Shoulder Press", targetSets: 3, repMin: 6, repMax: 8, note: "rest 2-3 min" },
       { name: "Lateral Raises", targetSets: 3, repMin: 8, repMax: 12, note: "chest on incline bench" },
       { name: "Triceps Pushdown (back-supported)", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Captain's Chair Leg Raises", targetSets: 3, repMin: 10, repMax: 15, note: "tilt pelvis up, slow down" }
+      { name: "Captain's Chair Leg Raises", targetSets: 3, repMin: 10, repMax: 15, note: "straight legs, tilt pelvis up, 3 sec down" }
     ]},
     { id: "pull-day", name: "Pull Day", color: "pull", exercises: [
       { name: "Pull-Ups", targetSets: 3, repMin: 6, repMax: 8, note: "weighted, neutral grip, rest 2-3 min" },
@@ -297,7 +297,7 @@ svg { display: block; }
       { name: "Seated Leg Curls", targetSets: 3, repMin: 8, repMax: 10 },
       { name: "Reverse Pec Deck", targetSets: 3, repMin: 8, repMax: 12, note: "lead with elbows" },
       { name: "Biceps Curls", targetSets: 3, repMin: 6, repMax: 10, note: "no swing" },
-      { name: "Captain's Chair Leg Raises", targetSets: 3, repMin: 10, repMax: 15, note: "tilt pelvis up, slow down" }
+      { name: "Captain's Chair Leg Raises", targetSets: 3, repMin: 10, repMax: 15, note: "straight legs, tilt pelvis up, 3 sec down" }
     ]},
     { id: "mix-day", name: "Mix Day", color: "mix", exercises: [
       { name: "Flat Bench Press", targetSets: 3, repMin: 6, repMax: 8, note: "dumbbells, rest 2-3 min" },
@@ -305,11 +305,11 @@ svg { display: block; }
       { name: "Pec Deck", targetSets: 3, repMin: 8, repMax: 12 },
       { name: "Lateral Raises", targetSets: 3, repMin: 8, repMax: 12, note: "chest on incline bench" },
       { name: "Bulgarian Split Squats", targetSets: 3, repMin: 8, repMax: 10, note: "2-3 RIR, stop if shin hurts" },
-      { name: "Captain's Chair Leg Raises", targetSets: 3, repMin: 10, repMax: 15, note: "tilt pelvis up, slow down" }
+      { name: "Captain's Chair Leg Raises", targetSets: 3, repMin: 10, repMax: 15, note: "straight legs, tilt pelvis up, 3 sec down" }
     ]}
   ];
   var SEED_EXERCISES = Array.from(new Set(SEED_TEMPLATES.flatMap(function (t) { return t.exercises.map(function (e) { return e.name; }); })));
-  var DEFAULT_DATA = { exercises: SEED_EXERCISES, templates: SEED_TEMPLATES, sessions: [], draft: null, goals: { sessions: 4, sets: 60 }, exerciseEmoji: {}, settings: { step: 2.5, rest: 90 }, seedVersion: 4 };
+  var DEFAULT_DATA = { exercises: SEED_EXERCISES, templates: SEED_TEMPLATES, sessions: [], draft: null, goals: { sessions: 4, sets: 60 }, exerciseEmoji: {}, settings: { step: 2.5, rest: 90 }, seedVersion: 5 };
 
   // ---------- fun emoji matching (auto-guess + manual override) ----------
   var EMOJI_MAP = [
@@ -405,12 +405,12 @@ svg { display: block; }
   }
   // Refresh the built-in plans to the agreed sets/reps, keep sessions and any custom plans.
   function migrate(d) {
-    if (d.seedVersion !== 4) {
+    if (d.seedVersion !== 5) {
       var seedIds = SEED_TEMPLATES.map(function (t) { return t.id; });
       var custom = (d.templates || []).filter(function (t) { return seedIds.indexOf(t.id) === -1; });
       d.templates = JSON.parse(JSON.stringify(SEED_TEMPLATES)).concat(custom);
       SEED_EXERCISES.forEach(function (n) { if (d.exercises.indexOf(n) === -1) d.exercises.push(n); });
-      d.seedVersion = 4;
+      d.seedVersion = 5;
     }
     if (!d.settings) d.settings = { step: 2.5, rest: 90 };
     return d;
