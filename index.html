@@ -284,32 +284,32 @@ svg { display: block; }
 
   var SEED_TEMPLATES = [
     { id: "push-day", name: "Push Day", color: "push", exercises: [
-      { name: "Flat Bench Press", targetSets: 3, repMin: 8, repMax: 10 },
-      { name: "Pec Deck", targetSets: 3, repMin: 8, repMax: 10 },
-      { name: "Walking Lunges", targetSets: 3, repMin: 10, repMax: 12 },
-      { name: "Machine Shoulder Press", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Rope Pushdown", targetSets: 3, repMin: 10, repMax: 15 },
-      { name: "Abs", targetSets: 3, repMin: 10, repMax: 15 }
+      { name: "Incline DB Press", targetSets: 3, repMin: 6, repMax: 8, note: "2 warm-up sets, rest 2-3 min" },
+      { name: "Walking Lunges", targetSets: 3, repMin: 8, repMax: 10, note: "per hand, stop if shin hurts" },
+      { name: "Seated DB Shoulder Press", targetSets: 3, repMin: 6, repMax: 8, note: "rest 2-3 min" },
+      { name: "Lateral Raises", targetSets: 3, repMin: 10, repMax: 15, note: "chest on incline bench" },
+      { name: "Triceps Pushdown (back-supported)", targetSets: 3, repMin: 8, repMax: 12 },
+      { name: "Captain's Chair Leg Raises", targetSets: 3, repMin: 10, repMax: 15, note: "tilt pelvis up, slow down" }
     ]},
     { id: "pull-day", name: "Pull Day", color: "pull", exercises: [
-      { name: "Pull-downs", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Machine Rows", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Seated Leg Curls", targetSets: 3, repMin: 10, repMax: 12 },
-      { name: "Face Pulls", targetSets: 3, repMin: 12, repMax: 15 },
-      { name: "Biceps Curls", targetSets: 3, repMin: 10, repMax: 12 },
-      { name: "Abs", targetSets: 3, repMin: 10, repMax: 15 }
+      { name: "Pull-Ups", targetSets: 3, repMin: 6, repMax: 8, note: "weighted, neutral grip, rest 2-3 min" },
+      { name: "Chest-Supported T-Bar Row", targetSets: 3, repMin: 6, repMax: 8, note: "straps, chest stays on pad" },
+      { name: "Seated Leg Curls", targetSets: 3, repMin: 8, repMax: 10 },
+      { name: "Reverse Pec Deck", targetSets: 3, repMin: 8, repMax: 12, note: "lead with elbows" },
+      { name: "Biceps Curls", targetSets: 3, repMin: 6, repMax: 10, note: "no swing" },
+      { name: "Captain's Chair Leg Raises", targetSets: 3, repMin: 10, repMax: 15, note: "tilt pelvis up, slow down" }
     ]},
     { id: "mix-day", name: "Mix Day", color: "mix", exercises: [
-      { name: "Incline DB Press", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Pull-Ups", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Bulgarian Split Squats", targetSets: 3, repMin: 10, repMax: 12 },
-      { name: "Lateral Raises", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Dips", targetSets: 3, repMin: 8, repMax: 12 },
-      { name: "Abs", targetSets: 3, repMin: 12, repMax: 15 }
+      { name: "Flat Bench Press", targetSets: 3, repMin: 6, repMax: 8, note: "dumbbells, rest 2-3 min" },
+      { name: "Pull-downs", targetSets: 3, repMin: 6, repMax: 10, note: "overhand, straps, pause" },
+      { name: "Pec Deck", targetSets: 3, repMin: 8, repMax: 12 },
+      { name: "Lateral Raises", targetSets: 3, repMin: 10, repMax: 15, note: "chest on incline bench" },
+      { name: "Bulgarian Split Squats", targetSets: 3, repMin: 8, repMax: 10, note: "2-3 RIR, stop if shin hurts" },
+      { name: "Captain's Chair Leg Raises", targetSets: 3, repMin: 10, repMax: 15, note: "tilt pelvis up, slow down" }
     ]}
   ];
   var SEED_EXERCISES = Array.from(new Set(SEED_TEMPLATES.flatMap(function (t) { return t.exercises.map(function (e) { return e.name; }); })));
-  var DEFAULT_DATA = { exercises: SEED_EXERCISES, templates: SEED_TEMPLATES, sessions: [], draft: null, goals: { sessions: 4, sets: 60 }, exerciseEmoji: {}, settings: { step: 2.5, rest: 90 }, seedVersion: 2 };
+  var DEFAULT_DATA = { exercises: SEED_EXERCISES, templates: SEED_TEMPLATES, sessions: [], draft: null, goals: { sessions: 4, sets: 60 }, exerciseEmoji: {}, settings: { step: 2.5, rest: 90 }, seedVersion: 3 };
 
   // ---------- fun emoji matching (auto-guess + manual override) ----------
   var EMOJI_MAP = [
@@ -405,12 +405,12 @@ svg { display: block; }
   }
   // Refresh the built-in plans to the agreed sets/reps, keep sessions and any custom plans.
   function migrate(d) {
-    if (d.seedVersion !== 2) {
+    if (d.seedVersion !== 3) {
       var seedIds = SEED_TEMPLATES.map(function (t) { return t.id; });
       var custom = (d.templates || []).filter(function (t) { return seedIds.indexOf(t.id) === -1; });
       d.templates = JSON.parse(JSON.stringify(SEED_TEMPLATES)).concat(custom);
       SEED_EXERCISES.forEach(function (n) { if (d.exercises.indexOf(n) === -1) d.exercises.push(n); });
-      d.seedVersion = 2;
+      d.seedVersion = 3;
     }
     if (!d.settings) d.settings = { step: 2.5, rest: 90 };
     return d;

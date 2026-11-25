@@ -1,6 +1,6 @@
 // Pump — minimal offline app-shell cache.
 // Bump CACHE_NAME whenever index.html changes so users pick up the new version.
-var CACHE_NAME = "pump-v6";
+var CACHE_NAME = "pump-v7";
 var SHELL = [
   "./",
   "./index.html",
