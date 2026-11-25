@@ -446,6 +446,15 @@ svg { display: block; }
     });
     return best;
   }
+  function bestRepsAt(name, w) {
+    var reps = 0;
+    data.sessions.forEach(function (s) {
+      s.entries.forEach(function (e) {
+        if (e.exerciseName === name) e.sets.forEach(function (set) { if (set.weight === w && set.reps > reps) reps = set.reps; });
+      });
+    });
+    return reps;
+  }
   function targetText(entry) {
     if (!entry.target || !entry.target.sets) return null;
     var t = "Target " + entry.target.sets + " × " + entry.target.repMin + (entry.target.repMax && entry.target.repMax !== entry.target.repMin ? "–" + entry.target.repMax : "");
@@ -883,7 +892,7 @@ svg { display: block; }
       if (editingSI === null) rows += editorHtml(entry, idx, null);
       for (var n = entry.sets.length + (editingSI === null ? 1 : 0); n < planned; n++) rows += setRowPending(n + 1, ref ? ref.weight : "", ref ? ref.reps : "");
       var best = bestWeightFor(entry.exerciseName);
-      body = '<div class="wt-ex-body' + (exAnim === idx ? ' wt-ex-anim' : '') + '">' + rows + (best > 0 ? '<div class="wt-best-hint">Best so far — ' + best + 'kg</div>' : '') + '</div>';
+      body = '<div class="wt-ex-body' + (exAnim === idx ? ' wt-ex-anim' : '') + '">' + rows + (best > 0 ? '<div class="wt-best-hint">Best so far — ' + best + 'kg × ' + bestRepsAt(entry.exerciseName, best) + '</div>' : '') + '</div>';
     }
     return '<div class="wt-excard' + (open ? ' wt-excard-open' : '') + (done && !open ? ' wt-excard-done' : '') + '">' + head + body + '</div>';
   }
