@@ -73,6 +73,10 @@ svg { display: block; }
 @keyframes wtToastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
 /* ---- progress ring ---- */
+.wt-mini-prog { display: flex; align-items: center; gap: 10px; margin: 10px 0 14px; }
+.wt-mini-bar { flex: 1; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.wt-mini-bar > div { height: 100%; border-radius: 3px; transition: width .4s ease; }
+.wt-mini-cap { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--dim); white-space: nowrap; }
 .wt-ring-block { display: flex; align-items: center; gap: 20px; margin: 26px 0 30px; }
 .wt-ring-wrap { position: relative; width: 92px; height: 92px; flex-shrink: 0; }
 .wt-ring-fg { transition: stroke-dashoffset .85s cubic-bezier(.16,.8,.3,1); }
@@ -532,6 +536,9 @@ svg { display: block; }
 
   // last logged set for an exercise: current draft first, then most recent session
   function lastSetFor(name, draftEntry) {
+    var n = draftEntry ? draftEntry.sets.length : 0;
+    var prevEntry = lastEntryFor(name);
+    if (prevEntry && prevEntry.sets[n]) return prevEntry.sets[n];
     if (draftEntry && draftEntry.sets.length) return draftEntry.sets[draftEntry.sets.length - 1];
     for (var i = data.sessions.length - 1; i >= 0; i--) {
       var e = data.sessions[i].entries.find(function (x) { return x.exerciseName === name && x.sets.length; });
@@ -790,6 +797,7 @@ svg { display: block; }
       '<div class="wt-filter-row">' + rests.map(function (r) {
         return '<button class="wt-filter-chip' + (data.settings.rest === r ? " wt-filter-chip-active" : "") + '" data-action="set-rest" data-arg="' + r + '">' + (r >= 60 ? (r / 60) + "m" : r + "s") + '</button>';
       }).join("") + '</div>' +
+      '<div class="wt-section-title">Weight step</div>' + stepRow() +
       '<div class="wt-section-title">Weekly goal</div>' +
       '<button class="wt-option" data-action="go-view" data-arg="goals"><span>' + data.goals.sessions + ' workouts per week</span><span class="wt-dim">Edit</span></button>' +
       '<div class="wt-section-title">Backup</div>' +
@@ -890,7 +898,8 @@ svg { display: block; }
       var prog = !entry.sets.length ? progressionFor(entry) : null;
       var ref = prog || (entry.sets.length ? entry.sets[entry.sets.length - 1] : prevSet);
       if (editingSI === null) rows += editorHtml(entry, idx, null);
-      for (var n = entry.sets.length + (editingSI === null ? 1 : 0); n < planned; n++) rows += setRowPending(n + 1, ref ? ref.weight : "", ref ? ref.reps : "");
+      var prevEntryP = lastEntryFor(entry.exerciseName);
+      for (var n = entry.sets.length + (editingSI === null ? 1 : 0); n < planned; n++) { var rf = (!prog && prevEntryP && prevEntryP.sets[n]) || ref; rows += setRowPending(n + 1, rf ? rf.weight : "", rf ? rf.reps : ""); }
       var best = bestWeightFor(entry.exerciseName);
       body = '<div class="wt-ex-body' + (exAnim === idx ? ' wt-ex-anim' : '') + '">' + rows + (best > 0 ? '<div class="wt-best-hint">Best so far — ' + best + 'kg × ' + bestRepsAt(entry.exerciseName, best) + '</div>' : '') + '</div>';
     }
@@ -906,10 +915,9 @@ svg { display: block; }
     var totalTarget = draft.entries.reduce(function (sum, e) { return sum + (e.target ? e.target.sets : 0); }, 0);
     var badgeColor = draft.dayColor ? DAY_COLORS[draft.dayColor] : "var(--accent)";
 
-    var ringBlock = '<div class="wt-ring-block">' + ring(totalSets, totalTarget, badgeColor) +
-      '<div class="wt-ring-caption">' + (totalTarget > 0
-        ? '<b>' + totalSets + ' of ' + totalTarget + '</b> planned sets logged.'
-        : (totalSets > 0 ? '<b>' + totalSets + '</b> sets logged so far.' : 'No sets logged yet.')) + '</div></div>';
+    var pct = totalTarget > 0 ? Math.min(100, Math.round(totalSets / totalTarget * 100)) : 0;
+    var ringBlock = '<div class="wt-mini-prog"><div class="wt-mini-bar"><div style="width:' + pct + '%;background:' + badgeColor + '"></div></div>' +
+      '<span class="wt-mini-cap">' + totalSets + (totalTarget > 0 ? '/' + totalTarget : '') + ' sets</span></div>';
 
     var openIdx = currentOpen(draft);
     var blocks = draft.entries.map(function (entry, idx) { return exBlockHtml(entry, idx, idx === openIdx); }).join("");
@@ -920,10 +928,10 @@ svg { display: block; }
     }).join("");
 
     return '<div class="wt-screen">' +
-      '<div class="wt-row-between"><div><div class="wt-eyebrow" style="color:' + badgeColor + '">' + emojiFor(draft.templateName || "Freestyle") + ' ' + esc(draft.templateName || "Freestyle") +
-      '</div><h2 class="wt-h2">' + formatDateLong(draft.date) + '</h2></div>' +
+      '<div class="wt-row-between"><div class="wt-eyebrow" style="color:' + badgeColor + ';margin:0">' + emojiFor(draft.templateName || "Freestyle") + ' ' + esc(draft.templateName || "Freestyle") +
+      ' · ' + formatDateShort(draft.date) + '</div>' +
       '<button class="wt-icon-btn" data-action="cancel-workout">' + ICON.close + '</button></div>' +
-      ringBlock + stepRow() + blocks +
+      ringBlock + blocks +
       '<div class="wt-add-exercise"><div class="wt-add-exercise-label">Add exercise</div>' +
       '<div class="wt-set-form"><input class="wt-input" list="exercise-options" placeholder="Exercise name" id="new-exercise-input">' +
       '<datalist id="exercise-options">' + available.map(function (n) { return '<option value="' + esc(n) + '">'; }).join("") + '</datalist>' +
