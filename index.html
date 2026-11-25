@@ -208,27 +208,27 @@ svg { display: block; }
 .wt-ex-titlebox .wt-target { margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wt-ex-chev { color: var(--faint); display: flex; }
 .wt-ex-check { width: 24px; height: 24px; border-radius: 50%; background: var(--pr); color: #fff; display: flex; align-items: center; justify-content: center; }
-.wt-ex-body { padding: 2px 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.wt-ex-body { padding: 2px 12px 14px; display: flex; flex-direction: column; gap: 6px; }
 .wt-ex-anim { animation: wtFadeUp .3s cubic-bezier(.16,.8,.3,1); }
-.wt-setrow { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 12px; width: 100%; border: none; font-family: inherit; text-align: left; }
+.wt-setrow { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 12px; width: 100%; border: none; font-family: inherit; text-align: left; }
 .wt-setrow-done { background: rgba(30,142,95,.10); color: var(--text); cursor: pointer; }
 .wt-setrow-pending { background: transparent; border: 1px dashed var(--border); color: var(--faint); }
-.wt-setnum { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px; flex-shrink: 0; }
+.wt-setnum { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 11px; flex-shrink: 0; }
 .wt-setnum-done { background: var(--pr); border-color: var(--pr); color: #fff; }
-.wt-setval { font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 500; flex: 1; }
+.wt-setval { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; flex: 1; }
 .wt-setval small { font-size: 11px; opacity: .6; margin-left: 2px; }
 .wt-setpr { color: var(--pr); font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
 .wt-setedit { font-size: 11px; color: var(--faint); }
-.wt-editor { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 14px 12px 12px; }
-.wt-editor-hint { font-size: 12px; font-weight: 500; color: var(--dim); text-align: center; margin: 0 0 12px; }
+.wt-editor { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 8px 10px 10px; }
+.wt-editor-hint { font-size: 12px; font-weight: 500; color: var(--dim); text-align: center; margin: 0 0 4px; }
 .wt-editor .wt-steppers { margin-top: 0; }
-.wt-editor .wt-step-btn { width: 38px; height: 38px; border-radius: 50%; align-self: center; font-size: 20px; }
+.wt-editor .wt-step-btn { width: 34px; height: 34px; border-radius: 50%; align-self: center; font-size: 18px; }
 .wt-editor .wt-stepper { align-items: center; }
 .wt-stepper-mid { flex: 1; text-align: center; min-width: 0; }
-.wt-big-input { width: 100%; background: transparent; border: none; text-align: center; font-family: 'Fraunces', serif; font-size: 34px; font-weight: 500; color: var(--text); padding: 0; outline: none; -moz-appearance: textfield; }
+.wt-big-input { width: 100%; background: transparent; border: none; text-align: center; font-family: 'Fraunces', serif; font-size: 26px; font-weight: 500; color: var(--text); padding: 0; outline: none; -moz-appearance: textfield; }
 .wt-big-input::-webkit-outer-spin-button, .wt-big-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .wt-unit { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-top: -2px; }
-.wt-log-btn { width: 100%; margin-top: 14px; border: none; border-radius: 999px; background: var(--accent); color: var(--accent-ink); padding: 14px; font-family: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: transform .1s ease; }
+.wt-log-btn { width: 100%; margin-top: 8px; border: none; border-radius: 999px; background: var(--accent); color: var(--accent-ink); padding: 10px; font-family: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: transform .1s ease; }
 .wt-log-btn:active { transform: scale(.97); }
 .wt-editor-actions { display: flex; justify-content: space-between; margin-top: 12px; padding: 0 4px; }
 
@@ -548,11 +548,13 @@ svg { display: block; }
   }
   // last completed session entry for an exercise
   function lastEntryFor(name) {
-    for (var i = data.sessions.length - 1; i >= 0; i--) {
-      var e = data.sessions[i].entries.find(function (x) { return x.exerciseName === name && x.sets.length; });
-      if (e) return e;
-    }
-    return null;
+    var best = null, bestT = -Infinity;
+    data.sessions.forEach(function (s) {
+      var e = s.entries.find(function (x) { return x.exerciseName === name && x.sets.length; });
+      var t = new Date(s.date).getTime();
+      if (e && t >= bestT) { best = e; bestT = t; }
+    });
+    return best;
   }
   // if every target set hit the top of the rep range last time, suggest more weight
   function progressionFor(entry) {
